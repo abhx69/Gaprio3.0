@@ -6,8 +6,23 @@ import Link from 'next/link';
 
 // --- SVG Icon Components ---
 const ArrowRightIcon = (props) => (
-  <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+  <svg
+    {...props}
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <line x1="5" y1="12" x2="19" y2="12"></line>
+    <polyline points="12 5 19 12 12 19"></polyline>
+  </svg>
 );
+
 const BotIcon = (props) => (
   <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8V4H8"></path><rect width="16" height="12" x="4" y="8" rx="2"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path></svg>
 );
@@ -173,27 +188,27 @@ export default function Hero() {
     );
   }, [isGsapReady]);
 
-  // Mouse move spotlight effect
-  useEffect(() => {
-    if (!heroRef.current) return;
-    const handleMouseMove = (e) => {
-      const { clientX, clientY } = e;
-      const x = (clientX / window.innerWidth) * 100;
-      const y = (clientY / window.innerHeight) * 100;
-      heroRef.current.style.setProperty('--x', `${x}%`);
-      heroRef.current.style.setProperty('--y', `${y}%`);
-    };
+useEffect(() => {
+  const handleMouseMove = (e) => {
+    if (!heroRef.current) return; // ✅ Check here too
+    const { clientX, clientY } = e;
+    const x = (clientX / window.innerWidth) * 100;
+    const y = (clientY / window.innerHeight) * 100;
+    heroRef.current.style.setProperty('--x', `${x}%`);
+    heroRef.current.style.setProperty('--y', `${y}%`);
+  };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  window.addEventListener('mousemove', handleMouseMove);
+  return () => window.removeEventListener('mousemove', handleMouseMove);
+}, []);
+
 
   return (
-    <section 
-      ref={heroRef}
-      className="relative min-h-screen w-full bg-gray-900 text-white overflow-hidden flex items-center justify-center py-8 sm:py-0"
-      style={{ '--x': '50%', '--y': '50%' }}
-    >
+<section
+  ref={heroRef}
+  className="relative w-full bg-gray-900 text-white overflow-hidden flex items-center justify-center min-h-auto sm:min-h-screen pt-14 sm:pt-0 pb-4 sm:py-8"
+  style={{ '--x': '50%', '--y': '50%' }}
+>
       {/* Enhanced Background Effects */}
       <div className="absolute inset-0 -z-20 grid-pattern"></div>
       <div 

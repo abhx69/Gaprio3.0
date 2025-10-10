@@ -1,10 +1,12 @@
 'use client'
 import { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { FiGithub, FiLinkedin, FiTwitter, FiMail } from 'react-icons/fi'
+import { FiGithub, FiLinkedin, FiTwitter, FiMail, FiInstagram } from 'react-icons/fi'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Image from 'next/image'
+import { FiZap, FiUsers, FiArrowUpRight } from "react-icons/fi"; // Example icons
+
 
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
@@ -45,10 +47,10 @@ export default function TeamLeadership() {
       role: "Lead Developer",
       image: "/team/eklak.jpg",
       social: [
-        { icon: <FiGithub />, url: "#" },
-        { icon: <FiLinkedin />, url: "#" },
-        { icon: <FiTwitter />, url: "#" },
-        { icon: <FiMail />, url: "#" }
+        { icon: <FiGithub />, url: "https://github.com/Eklak-Alam" },
+        { icon: <FiLinkedin />, url: "https://www.linkedin.com/in/eklak-alam/" },
+        { icon: <FiTwitter />, url: "https://x.com/dev_eklak" },
+        { icon: <FiMail />, url: "mailto:eklakalam420@gmail.com" }
       ],
       borderColor: "from-purple-500 to-indigo-500"
     }
@@ -273,38 +275,43 @@ export default function TeamLeadership() {
         </div>
 
         {/* Team ethos */}
-        <div ref={ethosRef} className="mt-20 bg-gradient-to-r from-indigo-900/30 to-purple-900/30 border border-gray-800 rounded-2xl p-8 opacity-0">
-          <h3 className="text-2xl font-bold text-white mb-6">Our Leadership Ethos</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 mt-1 w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400">
-                <span className="text-lg">⚡</span>
-              </div>
-              <div>
-                <h4 className="text-lg font-medium text-white mb-2">Innovation First</h4>
-                <p className="text-gray-400">Pushing boundaries in AI-human collaboration</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 mt-1 w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400">
-                <span className="text-lg">🤝</span>
-              </div>
-              <div>
-                <h4 className="text-lg font-medium text-white mb-2">Collaborative Spirit</h4>
-                <p className="text-gray-400">Strength through diverse perspectives</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 mt-1 w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
-                <span className="text-lg">🚀</span>
-              </div>
-              <div>
-                <h4 className="text-lg font-medium text-white mb-2">Future Focused</h4>
-                <p className="text-gray-400">Building tomorrow's communication tools today</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        
+<div ref={ethosRef} className="mt-20 bg-gradient-to-r from-indigo-900/30 to-purple-900/30 border border-gray-800 rounded-2xl p-8 opacity-0">
+  <h3 className="text-2xl font-bold text-white mb-6">Our Leadership Ethos</h3>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    
+    <div className="flex items-start gap-4">
+      <div className="flex-shrink-0 mt-1 w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400">
+        <FiZap className="w-5 h-5" />
+      </div>
+      <div>
+        <h4 className="text-lg font-medium text-white mb-2">Innovation First</h4>
+        <p className="text-gray-400">Pushing boundaries in AI-human collaboration</p>
+      </div>
+    </div>
+
+    <div className="flex items-start gap-4">
+      <div className="flex-shrink-0 mt-1 w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400">
+        <FiUsers className="w-5 h-5" />
+      </div>
+      <div>
+        <h4 className="text-lg font-medium text-white mb-2">Collaborative Spirit</h4>
+        <p className="text-gray-400">Strength through diverse perspectives</p>
+      </div>
+    </div>
+
+    <div className="flex items-start gap-4">
+      <div className="flex-shrink-0 mt-1 w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+        <FiArrowUpRight className="w-5 h-5" />
+      </div>
+      <div>
+        <h4 className="text-lg font-medium text-white mb-2">Future Focused</h4>
+        <p className="text-gray-400">Building tomorrow's communication tools today</p>
+      </div>
+    </div>
+
+  </div>
+</div>
       </div>
     </section>
   )

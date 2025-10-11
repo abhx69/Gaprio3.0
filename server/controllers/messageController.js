@@ -39,10 +39,15 @@ const getChatHistory = async (req, res) => {
     try {
         const [messages] = await db.query(
             `SELECT * FROM messages 
-               WHERE (sender_id = ? AND receiver_id = ?) 
+             WHERE 
+               -- Regular messages between you and the selected user
+               (sender_id = ? AND receiver_id = ?) 
                OR (sender_id = ? AND receiver_id = ?) 
-               ORDER BY timestamp ASC`,
-            [loggedInUserId, otherUserId, otherUserId, loggedInUserId]
+               OR 
+               -- AI responses that belong to this chat context
+               (is_ai_response = 1 AND context_chat_id = ?)
+             ORDER BY timestamp ASC`,
+            [loggedInUserId, otherUserId, otherUserId, loggedInUserId, otherUserId]
         );
         res.json(messages);
     } catch (error) {
@@ -130,7 +135,7 @@ const deleteMessage = async (req, res) => {
     const { messageId } = req.params;
 
     try {
-        // 1. First, get the message to verify the sender
+        // 1. First, get the message to verify the sender 
         const [messages] = await db.query('SELECT sender_id FROM messages WHERE id = ?', [messageId]);
 
         if (messages.length === 0) {

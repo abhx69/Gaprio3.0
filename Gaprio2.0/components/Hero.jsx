@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import Link from 'next/link';
+import Link from 'next/link'
 
 // --- SVG Icon Components ---
 const ArrowRightIcon = (props) => (
@@ -21,57 +21,68 @@ const ArrowRightIcon = (props) => (
     <line x1="5" y1="12" x2="19" y2="12"></line>
     <polyline points="12 5 19 12 12 19"></polyline>
   </svg>
-);
+)
 
 const BotIcon = (props) => (
   <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8V4H8"></path><rect width="16" height="12" x="4" y="8" rx="2"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path></svg>
-);
+)
+
 const UsersIcon = (props) => (
   <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-);
+)
+
 const FileTextIcon = (props) => (
   <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
-);
+)
+
 const MessageCircleIcon = (props) => (
   <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-);
+)
+
+const ZapIcon = (props) => (
+  <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+)
+
+const SparklesIcon = (props) => (
+  <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.287 1.288L3 12l5.8 1.9a2 2 0 0 1 1.288 1.287L12 21l1.9-5.8a2 2 0 0 1 1.287-1.288L21 12l-5.8-1.9a2 2 0 0 1-1.288-1.287Z"></path></svg>
+)
 
 // --- Custom Hook to load external scripts ---
 const useExternalScript = (url, callback) => {
-    useEffect(() => {
-        if (!url) return;
-        const script = document.createElement('script');
-        script.src = url;
-        script.async = true;
-        script.onload = () => {
-            if (callback) callback();
-        };
-        document.body.appendChild(script);
-        return () => {
-            document.body.removeChild(script);
-        };
-    }, [url, callback]);
-};
+  useEffect(() => {
+    if (!url) return
+    const script = document.createElement('script')
+    script.src = url
+    script.async = true
+    script.onload = () => {
+      if (callback) callback()
+    }
+    document.body.appendChild(script)
+    return () => {
+      document.body.removeChild(script)
+    }
+  }, [url, callback])
+}
 
 // --- Animated Magnetic Button Component ---
 const MagneticButton = ({ children }) => {
-  const ref = useRef(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const ref = useRef(null)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
 
   const handleMouse = (e) => {
-    if (!ref.current) return;
-    const { clientX, clientY } = e;
-    const { height, width, left, top } = ref.current.getBoundingClientRect();
-    const middleX = clientX - (left + width / 2);
-    const middleY = clientY - (top + height / 2);
-    setPosition({ x: middleX * 0.15, y: middleY * 0.15 });
-  };
+    if (!ref.current) return
+    const { clientX, clientY } = e
+    const { height, width, left, top } = ref.current.getBoundingClientRect()
+    const middleX = clientX - (left + width / 2)
+    const middleY = clientY - (top + height / 2)
+    setPosition({ x: middleX * 0.15, y: middleY * 0.15 })
+  }
 
   const reset = () => {
-    setPosition({ x: 0, y: 0 });
-  };
+    setPosition({ x: 0, y: 0 })
+  }
 
-  const { x, y } = position;
+  const { x, y } = position
 
   return (
     <motion.div
@@ -84,131 +95,105 @@ const MagneticButton = ({ children }) => {
     >
       {children}
     </motion.div>
-  );
-};
+  )
+}
 
-// --- Floating Platform Element Components ---
-const ContractCard = () => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.8, y: 20 }}
-    animate={{ opacity: 1, scale: 1, y: 0 }}
-    transition={{ duration: 0.6, delay: 1.2 }}
-    className="absolute top-6 right-6 sm:top-10 sm:right-10 lg:top-20 lg:right-20 w-20 h-28 sm:w-24 sm:h-32 lg:w-32 lg:h-40 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-xl shadow-2xl p-2 sm:p-3 lg:p-4 backdrop-blur-sm border border-white/20"
-  >
-    <div className="flex items-center gap-1 lg:gap-2 mb-2">
-      <FileTextIcon className="w-3 h-3 sm:w-3 sm:h-3 lg:w-4 lg:h-4 text-white" />
-      <span className="text-white text-xs font-semibold">Contract</span>
-    </div>
-    <div className="space-y-1">
-      <div className="h-1 bg-white/40 rounded"></div>
-      <div className="h-1 bg-white/30 rounded w-3/4"></div>
-      <div className="h-1 bg-white/20 rounded w-1/2"></div>
-    </div>
-    <div className="absolute bottom-2 left-2 right-2 sm:bottom-3 sm:left-3 sm:right-3">
-      <div className="h-2 bg-green-400 rounded-full"></div>
-    </div>
-  </motion.div>
-);
+// --- Floating Icon Components ---
+const FloatingIcon = ({ icon: Icon, position, delay, size = "normal" }) => {
+  const sizeClasses = {
+    small: "w-8 h-8 sm:w-10 sm:h-10",
+    normal: "w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14",
+    large: "w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20"
+  }
 
-const ChatBubble = ({ message, isAI, delay }) => (
-  <motion.div
-    initial={{ opacity: 0, x: isAI ? -20 : 20, scale: 0.9 }}
-    animate={{ opacity: 1, x: 0, scale: 1 }}
-    transition={{ duration: 0.5, delay }}
-    className={`flex ${isAI ? 'justify-start' : 'justify-end'} mb-1 sm:mb-2`}
-  >
-    <div className={`max-w-[80px] sm:max-w-xs lg:max-w-sm p-2 sm:p-3 lg:p-4 rounded-2xl ${
-      isAI 
-        ? 'bg-white/10 backdrop-blur-sm border border-white/20 rounded-bl-none' 
-        : 'bg-gradient-to-r from-purple-500 to-pink-500 rounded-br-none'
-    }`}>
-      <p className="text-white text-xs sm:text-xs lg:text-sm">{message}</p>
-    </div>
-  </motion.div>
-);
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ duration: 0.6, delay }}
+      className={`absolute ${position} ${sizeClasses[size]} bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/10 flex items-center justify-center`}
+    >
+      <Icon className={`${size === "small" ? "w-4 h-4 sm:w-5 sm:h-5" : size === "normal" ? "w-5 h-5 sm:w-6 sm:h-6" : "w-6 h-6 sm:w-8 sm:h-8"} text-purple-300`} />
+    </motion.div>
+  )
+}
 
-const GroupChatWindow = () => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.9, y: 20 }}
-    animate={{ opacity: 1, scale: 1, y: 0 }}
-    transition={{ duration: 0.6, delay: 1.4 }}
-    className="absolute bottom-16 left-6 sm:bottom-20 sm:left-10 lg:bottom-32 lg:left-20 w-28 h-36 sm:w-32 sm:h-40 lg:w-40 lg:h-48 bg-gray-800/80 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/10 p-2 sm:p-3 lg:p-4"
-  >
-    <div className="flex items-center gap-1 sm:gap-2 mb-2 sm:mb-3">
-      <UsersIcon className="w-3 h-3 sm:w-4 sm:h-4 text-purple-400" />
-      <span className="text-white text-xs sm:text-sm font-semibold">Team Chat</span>
-    </div>
-    <div className="space-y-1 sm:space-y-2">
-      <ChatBubble message="Review contract?" isAI={true} delay={1.6} />
-      <ChatBubble message="Generating..." isAI={false} delay={1.8} />
-    </div>
-  </motion.div>
-);
+const AnimatedFloatingIcon = ({ icon: Icon, position, delay, size = "normal" }) => {
+  const sizeClasses = {
+    small: "w-8 h-8 sm:w-10 sm:h-10",
+    normal: "w-10 h-10 sm:w-12 sm:h-12",
+    large: "w-12 h-12 sm:w-16 sm:h-16"
+  }
 
-const AIAssistant = () => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.8 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.6, delay: 1.6 }}
-    className="absolute top-1/2 right-1/4 transform -translate-y-1/2 hidden xl:block"
-  >
-    <div className="relative w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full shadow-2xl flex items-center justify-center">
-      <BotIcon className="w-8 h-8 text-white" />
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.6, delay }}
+      className={`absolute ${position} ${sizeClasses[size]} bg-gradient-to-br from-blue-500/20 to-cyan-400/20 backdrop-blur-lg rounded-full shadow-2xl border border-white/10 flex items-center justify-center`}
+    >
       <motion.div
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ duration: 2, repeat: Infinity }}
-        className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-gray-900"
-      />
-    </div>
-  </motion.div>
-);
+        animate={{ 
+          rotate: [0, 10, -10, 0],
+          scale: [1, 1.1, 1]
+        }}
+        transition={{ 
+          duration: 4,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      >
+        <Icon className={`${size === "small" ? "w-4 h-4" : size === "normal" ? "w-5 h-5" : "w-6 h-6"} text-cyan-300`} />
+      </motion.div>
+    </motion.div>
+  )
+}
 
 // --- Main Hero Section Component ---
 export default function Hero() {
-  const heroRef = useRef(null);
-  const [isGsapReady, setIsGsapReady] = useState(false);
+  const heroRef = useRef(null)
+  const [isGsapReady, setIsGsapReady] = useState(false)
 
   // Load GSAP and then set ready state
   useExternalScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js', () => {
-    setIsGsapReady(true);
-  });
+    setIsGsapReady(true)
+  })
 
-  const textGradient = `bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 bg-clip-text text-transparent`;
+  const textGradient = `bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 bg-clip-text text-transparent`
 
   // GSAP Animations
   useEffect(() => {
-    if (!isGsapReady || !heroRef.current) return;
-    const gsap = window.gsap;
+    if (!isGsapReady || !heroRef.current) return
+    const gsap = window.gsap
     
-    const tl = gsap.timeline({ defaults: { ease: 'power3.out' }});
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' }})
 
     tl.fromTo('.hero-element', 
       { opacity: 0, y: 30 },
       { opacity: 1, y: 0, duration: 1, stagger: 0.2, delay: 0.5 }
-    );
-  }, [isGsapReady]);
+    )
+  }, [isGsapReady])
 
-useEffect(() => {
-  const handleMouseMove = (e) => {
-    if (!heroRef.current) return; // ✅ Check here too
-    const { clientX, clientY } = e;
-    const x = (clientX / window.innerWidth) * 100;
-    const y = (clientY / window.innerHeight) * 100;
-    heroRef.current.style.setProperty('--x', `${x}%`);
-    heroRef.current.style.setProperty('--y', `${y}%`);
-  };
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!heroRef.current) return
+      const { clientX, clientY } = e
+      const x = (clientX / window.innerWidth) * 100
+      const y = (clientY / window.innerHeight) * 100
+      heroRef.current.style.setProperty('--x', `${x}%`)
+      heroRef.current.style.setProperty('--y', `${y}%`)
+    }
 
-  window.addEventListener('mousemove', handleMouseMove);
-  return () => window.removeEventListener('mousemove', handleMouseMove);
-}, []);
-
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [])
 
   return (
-<section
-  ref={heroRef}
-  className="relative w-full bg-gray-900 text-white overflow-hidden flex items-center justify-center min-h-auto sm:min-h-screen pt-14 sm:pt-0 pb-4 sm:py-8"
-  style={{ '--x': '50%', '--y': '50%' }}
->
+    <section
+      ref={heroRef}
+      className="relative w-full bg-gray-900 text-white overflow-hidden flex items-center justify-center min-h-auto sm:min-h-screen pt-14 sm:pt-0 pb-4 sm:py-8"
+      style={{ '--x': '50%', '--y': '50%' }}
+    >
       {/* Enhanced Background Effects */}
       <div className="absolute inset-0 -z-20 grid-pattern"></div>
       <div 
@@ -236,15 +221,51 @@ useEffect(() => {
         className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -z-10"
       />
 
+      {/* Floating Icons - Responsive positioning */}
+      <div className="hidden sm:block">
+        {/* Top Right - File Icon */}
+        <FloatingIcon 
+          icon={FileTextIcon} 
+          position="top-6 right-6 sm:top-10 sm:right-10 lg:top-16 lg:right-16" 
+          delay={1.2} 
+          size="normal"
+        />
+        
+        {/* Bottom Left - Users Icon */}
+        <FloatingIcon 
+          icon={UsersIcon} 
+          position="bottom-16 left-6 sm:bottom-20 sm:left-10 lg:bottom-28 lg:left-20" 
+          delay={1.4} 
+          size="normal"
+        />
+        
+        {/* Center Right - Animated Bot Icon */}
+        <AnimatedFloatingIcon 
+          icon={BotIcon} 
+          position="top-1/2 right-1/4 transform -translate-y-1/2" 
+          delay={1.6} 
+          size="large"
+        />
+        
+        {/* Top Left - Sparkles Icon */}
+        <FloatingIcon 
+          icon={SparklesIcon} 
+          position="top-10 left-8 sm:top-16 sm:left-16 lg:top-24 lg:left-24" 
+          delay={1.0} 
+          size="small"
+        />
+        
+        {/* Bottom Right - Zap Icon */}
+        <FloatingIcon 
+          icon={ZapIcon} 
+          position="bottom-10 right-8 sm:bottom-16 sm:right-16 lg:bottom-24 lg:right-24" 
+          delay={1.8} 
+          size="small"
+        />
+      </div>
+
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="max-w-6xl mx-auto">
-          {/* Platform Elements - Hidden on mobile, shown on tablet and up */}
-          <div className="hidden sm:block">
-            <ContractCard />
-            <GroupChatWindow />
-            <AIAssistant />
-          </div>
-
           {/* Top Badge - More compact on mobile */}
           <motion.div 
             initial={{ opacity: 0, y: 30 }}

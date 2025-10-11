@@ -65,13 +65,35 @@ def ingest_documents():
     embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
     logging.info("Embedding model loaded.")
 
-    # Create the vector store from the document chunks and save it to the 'db' directory
+    # Create the vector store from the document chunks using batch processing
     logging.info(f"Creating vector store in directory: '{DB_DIR}'...")
-    db = Chroma.from_documents(
-        chunks, 
-        embeddings, 
-        persist_directory=DB_DIR
-    )
+    
+    # Process in batches to avoid ChromaDB batch size limitation
+    batch_size = 4000  # Safe batch size well below ChromaDB's 5461 limit
+    total_batches = (len(chunks) + batch_size - 1) // batch_size  # Ceiling division
+    
+    logging.info(f"Processing {len(chunks)} chunks in {total_batches} batches of {batch_size}...")
+    
+    for batch_num in range(total_batches):
+        start_idx = batch_num * batch_size
+        end_idx = min(start_idx + batch_size, len(chunks))
+        batch_chunks = chunks[start_idx:end_idx]
+        
+        logging.info(f"Processing batch {batch_num + 1}/{total_batches} with {len(batch_chunks)} chunks...")
+        
+        if batch_num == 0:
+            # Create the vector store with the first batch
+            db = Chroma.from_documents(
+                documents=batch_chunks, 
+                embedding=embeddings, 
+                persist_directory=DB_DIR
+            )
+        else:
+            # Add subsequent batches to the existing store
+            db.add_documents(batch_chunks)
+        
+        logging.info(f"Completed batch {batch_num + 1}/{total_batches}")
+    
     logging.info("Vector store created and persisted successfully.")
     logging.info("Ingestion complete!")
 

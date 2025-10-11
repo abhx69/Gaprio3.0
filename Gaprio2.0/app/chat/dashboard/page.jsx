@@ -70,20 +70,37 @@ export default function ChatPage() {
   }, [user, selectedUser]);
 
   const handleSelectUser = async (userToSelect) => {
-    setSelectedUser(userToSelect);
-    try {
-      let response;
-      if (userToSelect.type === 'group') {
-        response = await API.get(`/groups/${userToSelect.id}/messages`);
-      } else {
-        response = await API.get(`/messages/${userToSelect.id}`);
-      }
-      setMessages(response.data.data || response.data.messages || response.data || []);
-    } catch (error) {
-      console.error("Failed to fetch messages:", error);
-      setMessages([]);
+  setSelectedUser(userToSelect);
+  try {
+    let response;
+    if (userToSelect.type === 'group') {
+      response = await API.get(`/groups/${userToSelect.id}/messages`);
+    } else {
+      response = await API.get(`/messages/${userToSelect.id}`);
     }
-  };
+    
+    const fetchedMessages = response.data.data || response.data.messages || response.data || [];
+    
+    console.log('=== DEBUG MESSAGE FETCH ===');
+    console.log('Selected User ID:', userToSelect.id);
+    console.log('Current User ID:', user.id);
+    console.log('Total messages fetched:', fetchedMessages.length);
+    
+    // Check if AI responses are in the fetched data
+    const aiMessages = fetchedMessages.filter(m => m.is_ai_response);
+    console.log('AI messages in response:', aiMessages);
+    
+    aiMessages.forEach(aiMsg => {
+      console.log(`AI Message - ID: ${aiMsg.id}, Context: ${aiMsg.context_chat_id}, Should show: ${aiMsg.context_chat_id === userToSelect.id}`);
+    });
+    
+    setMessages(fetchedMessages);
+    
+  } catch (error) {
+    console.error("Failed to fetch messages:", error);
+    setMessages([]);
+  }
+};
 
   const handleGroupUpdate = useCallback((updatedGroup) => {
     setGroups(prev => prev.map(group => 

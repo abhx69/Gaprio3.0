@@ -16,7 +16,7 @@ export default function GroupInfoSidebar({
   onRemoveMember,
   onDeleteGroup,
   onLeaveGroup,
-  onGroupUpdate, // New prop to handle group updates
+  onGroupUpdate,
 }) {
   const [loadingStates, setLoadingStates] = useState({
     removeMember: null,
@@ -38,7 +38,7 @@ export default function GroupInfoSidebar({
     setTimeout(() => {
       setShowSuccess(false);
       setSuccessMessage("");
-    }, 2000);
+    }, 3000);
   };
 
   // Enhanced remove member with loading state and confirmation
@@ -54,33 +54,29 @@ export default function GroupInfoSidebar({
       showToast(`✅ ${memberName} has been removed from the group!`);
     } catch (error) {
       console.error("Error removing member:", error);
-      // Error handling would be done in the parent component
+      showToast(`❌ Failed to remove ${memberName}`);
     } finally {
       setLoadingStates(prev => ({ ...prev, removeMember: null }));
     }
   };
 
   // Enhanced delete group with loading state and confirmation
- // Enhanced delete group with loading state and confirmation
-// Enhanced delete group with loading state and confirmation
-const handleDeleteGroup = async () => {
-  if (!window.confirm("Are you sure you want to delete this group? This action cannot be undone.")) return;
+  const handleDeleteGroup = async () => {
+    if (!window.confirm("Are you sure you want to delete this group? This action cannot be undone.")) return;
 
-  setLoadingStates(prev => ({ ...prev, deleteGroup: true }));
-  
-  try {
-    await onDeleteGroup();
-    // Don't show toast here - let the parent component handle success
-    onClose();
-  } catch (error) {
-    console.error("Error deleting group:", error);
-    // Show the actual error message from the backend
-    const errorMessage = error.message || "Failed to delete group";
-    showToast(`❌ ${errorMessage}`);
-  } finally {
-    setLoadingStates(prev => ({ ...prev, deleteGroup: false }));
-  }
-};
+    setLoadingStates(prev => ({ ...prev, deleteGroup: true }));
+    
+    try {
+      await onDeleteGroup();
+      showToast("✅ Group deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting group:", error);
+      const errorMessage = error.response?.data?.message || error.message || "Failed to delete group";
+      showToast(`❌ ${errorMessage}`);
+    } finally {
+      setLoadingStates(prev => ({ ...prev, deleteGroup: false }));
+    }
+  };
 
   // Enhanced leave group with loading state and confirmation
   const handleLeaveGroup = async () => {
@@ -93,9 +89,9 @@ const handleDeleteGroup = async () => {
     try {
       await onLeaveGroup();
       showToast("✅ You have left the group!");
-      onClose();
     } catch (error) {
       console.error("Error leaving group:", error);
+      showToast("❌ Failed to leave group");
     } finally {
       setLoadingStates(prev => ({ ...prev, leaveGroup: false }));
     }
@@ -115,13 +111,9 @@ const handleDeleteGroup = async () => {
 
       {/* Group Info Sidebar */}
       <div className="absolute inset-0 bg-black/60 z-40 flex justify-end animate-in slide-in-from-right duration-300">
-        <div
-          className={`w-full md:w-96 bg-gray-800/95 shadow-2xl border-l border-gray-700/50 overflow-y-auto backdrop-blur-xl`}
-        >
+        <div className="w-full md:w-96 bg-gray-800/95 shadow-2xl border-l border-gray-700/50 overflow-y-auto backdrop-blur-xl">
           {/* Header */}
-          <div
-            className={`p-6 border-b border-gray-700/50 bg-gradient-to-r from-blue-600 to-blue-700 text-white`}
-          >
+          <div className="p-6 border-b border-gray-700/50 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-bold text-xl">Group Information</h3>
@@ -142,17 +134,15 @@ const handleDeleteGroup = async () => {
           {/* Group Details */}
           <div className="p-6 border-b border-gray-700/50">
             <div className="flex items-center mb-6">
-              <div
-                className={`flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl mr-4 shadow-lg ring-2 ring-blue-500/30`}
-              >
+              <div className="flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl mr-4 shadow-lg ring-2 ring-blue-500/30">
                 <FaUsers className="text-white text-2xl" />
               </div>
               <div className="flex-1 min-w-0">
-                <h4 className={`font-bold text-white text-xl truncate`}>
+                <h4 className="font-bold text-white text-xl truncate">
                   {selectedUser.name}
                 </h4>
-                <p className={`text-sm text-gray-300 mt-1`}>
-                  {safeGroupMembers.length} member{safeGroupMembers.length !== 1 ? 's' : ''} •
+                <p className="text-sm text-gray-300 mt-1">
+                  {safeGroupMembers.length} member{safeGroupMembers.length !== 1 ? 's' : ''} • 
                   {selectedUser.owner_name && ` Created by ${selectedUser.owner_name}`}
                 </p>
                 {selectedUser.description && (
@@ -164,14 +154,14 @@ const handleDeleteGroup = async () => {
             </div>
 
             {selectedUser.created_at && (
-              <div className={`text-sm text-gray-400 flex items-center gap-2`}>
+              <div className="text-sm text-gray-400 flex items-center gap-2">
                 <span>📅</span>
                 <span>Created on {formatDate(selectedUser.created_at)}</span>
               </div>
             )}
 
             {selectedUser.updated_at && selectedUser.updated_at !== selectedUser.created_at && (
-              <div className={`text-sm text-gray-400 flex items-center gap-2 mt-1`}>
+              <div className="text-sm text-gray-400 flex items-center gap-2 mt-1">
                 <span>✏️</span>
                 <span>Updated on {formatDate(selectedUser.updated_at)}</span>
               </div>
@@ -181,14 +171,14 @@ const handleDeleteGroup = async () => {
           {/* Members Section */}
           <div className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <h4 className={`font-semibold text-white text-lg`}>
+              <h4 className="font-semibold text-white text-lg">
                 Group Members ({safeGroupMembers.length})
               </h4>
               {isOwner && (
                 <button
                   onClick={onShowAddMember}
                   disabled={loadingStates.deleteGroup}
-                  className={`flex items-center gap-2 px-4 py-2 text-sm bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg backdrop-blur-sm border border-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed`}
+                  className="flex items-center gap-2 px-4 py-2 text-sm bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg backdrop-blur-sm border border-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <IoAdd size={16} />
                   Add Member
@@ -209,9 +199,7 @@ const handleDeleteGroup = async () => {
                       {member.name?.charAt(0).toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div
-                        className={`font-medium text-white flex items-center gap-2 truncate`}
-                      >
+                      <div className="font-medium text-white flex items-center gap-2 truncate">
                         <span className="truncate">{member.name}</span>
                         {member.id === selectedUser.owner_id && (
                           <span className="flex items-center gap-1 px-2 py-1 bg-yellow-500/20 text-yellow-300 text-xs rounded-full border border-yellow-500/30 flex-shrink-0">
@@ -220,9 +208,7 @@ const handleDeleteGroup = async () => {
                           </span>
                         )}
                       </div>
-                      <div
-                        className={`text-xs text-gray-400 flex items-center gap-2 truncate`}
-                      >
+                      <div className="text-xs text-gray-400 flex items-center gap-2 truncate">
                         <span className="truncate">@{member.username}</span>
                         {member.id === user.id && (
                           <span className="text-green-400 flex-shrink-0">(You)</span>
@@ -251,8 +237,8 @@ const handleDeleteGroup = async () => {
           </div>
 
           {/* Group Actions */}
-          <div className={`p-6 border-t border-gray-700/50 bg-gray-750/30`}>
-            <h4 className={`font-semibold text-white mb-4 text-lg`}>
+          <div className="p-6 border-t border-gray-700/50 bg-gray-750/30">
+            <h4 className="font-semibold text-white mb-4 text-lg">
               Group Management
             </h4>
             <div className="space-y-3">
@@ -261,17 +247,17 @@ const handleDeleteGroup = async () => {
                   <button
                     onClick={onShowEditGroup}
                     disabled={loadingStates.deleteGroup}
-                    className={`w-full text-left p-4 bg-gray-700/30 rounded-xl hover:bg-gray-700/50 transition-all duration-200 border border-gray-600/50 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed`}
+                    className="w-full text-left p-4 bg-gray-700/30 rounded-xl hover:bg-gray-700/50 transition-all duration-200 border border-gray-600/50 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <div className="flex items-center gap-3">
                       <div className="p-2 bg-gray-600/20 rounded-lg">
                         <FaEdit className="text-gray-400" />
                       </div>
                       <div>
-                        <div className={`font-medium text-white`}>
+                        <div className="font-medium text-white">
                           Edit Group Info
                         </div>
-                        <div className={`text-xs text-gray-400`}>
+                        <div className="text-xs text-gray-400">
                           Change name and description
                         </div>
                       </div>
@@ -280,7 +266,7 @@ const handleDeleteGroup = async () => {
                   <button
                     onClick={handleDeleteGroup}
                     disabled={loadingStates.deleteGroup}
-                    className={`w-full text-left p-4 bg-gray-700/30 rounded-xl hover:bg-red-500/20 transition-all duration-200 border border-gray-600/50 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed`}
+                    className="w-full text-left p-4 bg-gray-700/30 rounded-xl hover:bg-red-500/20 transition-all duration-200 border border-gray-600/50 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <div className="flex items-center gap-3">
                       <div className="p-2 bg-red-500/20 rounded-lg">
@@ -294,7 +280,7 @@ const handleDeleteGroup = async () => {
                         <div className="font-medium text-red-400">
                           {loadingStates.deleteGroup ? 'Deleting Group...' : 'Delete Group'}
                         </div>
-                        <div className={`text-xs text-gray-400`}>
+                        <div className="text-xs text-gray-400">
                           Permanently delete this group
                         </div>
                       </div>
@@ -305,7 +291,7 @@ const handleDeleteGroup = async () => {
                 <button
                   onClick={handleLeaveGroup}
                   disabled={loadingStates.leaveGroup}
-                  className={`w-full text-left p-4 bg-gray-700/30 rounded-xl hover:bg-red-500/20 transition-all duration-200 border border-gray-600/50 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed`}
+                  className="w-full text-left p-4 bg-gray-700/30 rounded-xl hover:bg-red-500/20 transition-all duration-200 border border-gray-600/50 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-red-500/20 rounded-lg">
@@ -319,7 +305,7 @@ const handleDeleteGroup = async () => {
                       <div className="font-medium text-red-400">
                         {loadingStates.leaveGroup ? 'Leaving Group...' : 'Leave Group'}
                       </div>
-                      <div className={`text-xs text-gray-400`}>
+                      <div className="text-xs text-gray-400">
                         Leave this group
                       </div>
                     </div>

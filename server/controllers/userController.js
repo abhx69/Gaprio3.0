@@ -37,24 +37,37 @@ const updateUserProfile = async (req, res) => {
     }
 };
 
-// @desc    Search for users by username
+// @desc    Search for users by username or name
 // @route   GET /api/users/search?q=...
 const searchUsers = async (req, res) => {
     const query = req.query.q;
     if (!query) {
-        return res.status(400).json({ message: 'Search query is required' });
+        return res.status(400).json({ 
+            success: false,
+            message: 'Search query is required' 
+        });
     }
     try {
         const [users] = await db.query(
-            "SELECT id, name, username FROM users WHERE username LIKE ? AND id != ?", 
-            [`%${query}%`, req.user.id] // Exclude the current user from search results
+            "SELECT id, name, username, email FROM users WHERE (username LIKE ? OR name LIKE ?) AND id != ?", 
+            [`%${query}%`, `%${query}%`, req.user.id] // Search by both username and name, exclude current user
         );
-        res.json(users);
+        
+        res.json({
+            success: true,
+            data: {
+                users: users
+            },
+            message: `Found ${users.length} users`
+        });
     } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
+        console.error('Search users error:', error);
+        res.status(500).json({ 
+            success: false,
+            message: 'Server Error' 
+        });
     }
 };
-
 
 // @desc    Get user statistics
 // @route   GET /api/users/stats
